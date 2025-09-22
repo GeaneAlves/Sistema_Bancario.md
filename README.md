@@ -66,3 +66,87 @@ while True:
     else:
         print("Operação inválida, por favor selecione uma opção válida.")
 ```
+
+
+
+
+
+```python
+from datetime import datetime
+
+
+menu = """\n
+[1] Depositar
+[2] Sacar
+[3] Extrato
+[4] Sair
+
+=> """
+
+saldo = 0
+limite = 400
+extrato = ""
+numero_saques = 0
+LIMITE_SAQUES = 4
+LIMITE_TRANSACOES = 10
+transacoes_diarias = 0
+
+while True:
+
+    if transacoes_diarias >= LIMITE_TRANSACOES:
+        print("Limite diário de transações atingido, favor retornar amanhã.")
+        break
+    
+    opcao = input(menu)
+
+    if opcao == "1":
+        valor = float(input("Informe o valor do depósito: "))
+
+        if valor > 0:
+            saldo += valor
+            data_hora = datetime.now().strftime('%d/%m/%y %H:%M:%S')
+            extrato += f"{data_hora} - Depósito: R$ {valor:.2f}\n"
+            transacoes_diarias += 1
+        else:
+            print("Operação inválida! O valor informado é inválido.")
+
+    elif opcao == "2":
+        valor = float(input("Informe o valor do saque: "))
+
+        excedeu_saldo = valor > saldo
+        excedeu_limite = valor > limite
+        excedeu_saques = numero_saques >= LIMITE_SAQUES
+
+        if excedeu_saldo:
+            print("Operação inválida! Seu saldo é insuficiente.")
+        elif excedeu_limite:
+            print("Operação inválida! O valor do saque excede o limite de valor.")
+        elif excedeu_saques:
+            print("Operação inválida! Número máximo de saques diários excedido.")
+        elif valor > 0:
+            saldo -= valor
+            data_hora = datetime.now().strftime('%d/%m/%y %H:%M:%S')
+            extrato += f"{data_hora} - Saque: R$ {valor:.2f}\n"
+            numero_saques += 1
+            transacoes_diarias += 1
+        else:
+            print("Operação inválida! O valor informado é inválido.")
+
+    elif opcao == "3":
+        print("\n**************** EXTRATO ****************")
+        if not extrato:
+            print("Não foram realizadas movimentações.")
+        else:
+            print(extrato)
+        print(f"\nSaldo: R$ {saldo:.2f}")
+        print(f"Quantidade de operações realizadas hoje: {transacoes_diarias}")
+        print(f"Limite restante de operaçoes hoje: {LIMITE_TRANSACOES - transacoes_diarias}")
+        print("******************************************")
+
+    elif opcao == "4":
+        break
+
+    else:
+        print("Operação inválida, por favor selecione uma opção válida.")
+
+```
